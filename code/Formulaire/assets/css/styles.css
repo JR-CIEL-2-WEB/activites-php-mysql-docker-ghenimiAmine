@@ -1,0 +1,105 @@
+/* General body styles */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container styles */
+.contact-clean {
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Form header styles */
+.contact-clean h2 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 30px;
+    color: #202124;
+}
+
+/* Input fields */
+.contact-clean .form-control {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.contact-clean .form-control:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 1px 3px rgba(26, 115, 232, 0.4);
+    outline: none;
+}
+
+/* Textarea */
+.contact-clean textarea {
+    resize: none;
+}
+
+/* Error message */
+.contact-clean .text-danger {
+    font-size: 12px;
+    color: #d93025;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    text-align: left;
+    display: block;
+}
+
+/* Checkbox styles */
+.contact-clean .form-check {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.contact-clean .form-check-input {
+    margin-right: 10px;
+    transform: scale(1.2);
+    border: 1px solid #dadce0;
+}
+
+.contact-clean .form-check-label {
+    font-size: 14px;
+    color: #5f6368;
+}
+
+/* Submit button */
+.contact-clean .btn-primary {
+    background-color: #1a73e8;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.contact-clean .btn-primary:hover {
+    background-color: #174ea6;
+}
+
+/* Additional spacing for small screens */
+@media (max-width: 576px) {
+    .contact-clean {
+        padding: 20px;
+    }
+}

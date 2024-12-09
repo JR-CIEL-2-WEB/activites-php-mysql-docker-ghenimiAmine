@@ -60,47 +60,85 @@
 
 <body>
     <div class="container">
-        <?php
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = htmlspecialchars($_POST['name'] ?? '');
-            $prenom = htmlspecialchars($_POST['prénom'] ?? '');
-            $email = htmlspecialchars($_POST['email'] ?? '');
-            $password = htmlspecialchars($_POST['password'] ?? '');
-            $message = htmlspecialchars($_POST['message'] ?? '');
-            $of_age = isset($_POST['of_age']) ? 'Oui' : 'Non';
+    <?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = htmlspecialchars($_POST['name'] ?? '');
+    $prenom = htmlspecialchars($_POST['prénom'] ?? '');
+    $email = htmlspecialchars($_POST['email'] ?? '');
+    $password = htmlspecialchars($_POST['password'] ?? '');
+    $message = htmlspecialchars($_POST['message'] ?? '');
+    $of_age = isset($_POST['of_age']) ? 'Oui' : 'Non';
 
-            $errors = [];
+    $errors = [];
 
-            // Validation des champs
-            if (empty($name)) $errors[] = 'Le champ "Nom" est obligatoire.';
-            if (empty($prenom)) $errors[] = 'Le champ "Prénom" est obligatoire.';
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Email invalide.';
-            if (strlen($password) < 8) $errors[] = 'Le mot de passe doit contenir au moins 8 caractères.';
-            if (empty($message)) $errors[] = 'Le champ "Message" est obligatoire.';
-            if ($of_age === 'Non') $errors[] = 'Vous devez être majeur.';
+    // Validation des champs
+    if (empty($name)) $errors[] = 'Le champ "Nom" est obligatoire.';
+    if (empty($prenom)) $errors[] = 'Le champ "Prénom" est obligatoire.';
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Email invalide.';
+    if (strlen($password) < 8) $errors[] = 'Le mot de passe doit contenir au moins 8 caractères.';
+    if (empty($message)) $errors[] = 'Le champ "Message" est obligatoire.';
+    if ($of_age === 'Non') $errors[] = 'Vous devez être majeur.';
 
-            // Affichage des erreurs ou des données
-            if (!empty($errors)) {
-                echo '<h1>Erreurs</h1>';
-                echo '<ul class="error">';
-                foreach ($errors as $error) {
-                    echo "<li>$error</li>";
-                }
-                echo '</ul>';
-            } else {
-                echo '<h1>Données Reçues</h1>';
-                echo '<div class="data-row"><span class="data-label">Nom :</span> <span class="data-value">' . $name . '</span></div>';
-                echo '<div class="data-row"><span class="data-label">Prénom :</span> <span class="data-value">' . $prenom . '</span></div>';
-                echo '<div class="data-row"><span class="data-label">Email :</span> <span class="data-value">' . $email . '</span></div>';
-                echo '<div class="data-row"><span class="data-label">Message :</span> <span class="data-value">' . $message . '</span></div>';
-                echo '<div class="data-row"><span class="data-label">Majeur :</span> <span class="data-value">' . $of_age . '</span></div>';
-                echo '<div class="data-row"><span class="data-label">Mot de passe :</span> <span class="data-value">(non affiché pour des raisons de sécurité)</span></div>';
+    // Affichage des erreurs ou des données
+    if (!empty($errors)) {
+        echo '<h1>Erreurs</h1>';
+        echo '<ul class="error">';
+        foreach ($errors as $error) {
+            echo "<li>$error</li>";
+        }
+        echo '</ul>';
+    } else {
+        echo '<h1>Données Reçues</h1>';
+        echo '<div class="data-row"><span class="data-label">Nom :</span> <span class="data-value">' . $name . '</span></div>';
+        echo '<div class="data-row"><span class="data-label">Prénom :</span> <span class="data-value">' . $prenom . '</span></div>';
+        echo '<div class="data-row"><span class="data-label">Email :</span> <span class="data-value">' . $email . '</span></div>';
+        echo '<div class="data-row"><span class="data-label">Message :</span> <span class="data-value">' . $message . '</span></div>';
+        echo '<div class="data-row"><span class="data-label">Majeur :</span> <span class="data-value">' . $of_age . '</span></div>';
+        echo '<div class="data-row"><span class="data-label">Mot de passe :</span> <span class="data-value">(non affiché pour des raisons de sécurité)</span></div>';
+
+        // Préparation des données à sauvegarder
+        $newUser = [
+            'name' => $name,
+            'prenom' => $prenom,
+            'email' => $email,
+            'message' => $message,
+            'of_age' => $of_age
+        ];
+
+        // Définition du chemin complet vers le fichier JSON
+        $filePath = '/code/Formulaire/user.json';
+
+        // Chargement des utilisateurs existants
+        if (file_exists($filePath)) {
+            $users = json_decode(file_get_contents($filePath), true);
+            if (!is_array($users)) {
+                $users = []; // Réinitialise en cas de corruption de fichier
             }
         } else {
-            echo '<h1>Accès non autorisé</h1>';
-            echo '<p class="error">Veuillez soumettre le formulaire pour accéder à cette page.</p>';
+            $users = [];
         }
-        ?>
+
+        // Ajout du nouvel utilisateur
+        $users[] = $newUser;
+
+        // Sauvegarde dans le fichier JSON
+        if (is_writable(dirname($filePath))) {
+            if (file_put_contents($filePath, json_encode($users, JSON_PRETTY_PRINT)) === false) {
+                echo '<p class="error">Erreur : impossible d\'écrire dans le fichier user.json.</p>';
+            } else {
+                echo '<p class="success">Les données ont été sauvegardées avec succès dans user.json.</p>';
+            }
+        } else {
+            echo '<p class="error">Erreur : le répertoire n\'est pas accessible en écriture.</p>';
+        }
+    }
+} else {
+    echo '<h1>Accès non autorisé</h1>';
+    echo '<p class="error">Veuillez soumettre le formulaire pour accéder à cette page.</p>';
+}
+?>
+
+
     </div>
 </body>
 

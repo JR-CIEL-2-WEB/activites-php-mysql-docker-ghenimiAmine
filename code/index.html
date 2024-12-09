@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau et Médiane</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Saisie des valeurs</h1>
+    <input type="number" id="numberInput" placeholder="Entrez un entier">
+    <button id="addButton">Ajouter</button>
+    <button id="sendButton">Envoyer</button>
+
+    <h2>Résultats</h2>
+    <p id="result"></p>
+    <p id="median"></p>
+
+    <script>
+        let numbers = [];
+    
+        // Ajouter un entier au tableau
+        document.getElementById('addButton').addEventListener('click', () => {
+            const input = document.getElementById('numberInput');
+            const value = parseInt(input.value);
+    
+            const resultDiv = document.getElementById('result');
+    
+            if (value === -1) {
+                // Ajouter -1 au début de l'affichage des résultats
+                const displayedNumbers = [-1, ...numbers];
+                resultDiv.innerHTML = `<strong>Liste complète des nombres :</strong> ${displayedNumbers.join(', ')}`;
+            } else if (value > 0) {
+                // Ajouter les nombres au tableau
+                numbers.push(value);
+                resultDiv.innerHTML = `<strong>Nombre ajouté :</strong> ${value}`;
+            } else {
+                alert("Entrez un nombre entier supérieur à 0 ou -1 pour afficher la liste.");
+            }
+    
+            input.value = ''; // Réinitialiser l'entrée
+        });
+    
+        // Envoyer le tableau au serveur
+        document.getElementById('sendButton').addEventListener('click', () => {
+            if (numbers.length === 0) {
+                alert("Le tableau est vide !");
+                return;
+            }
+    
+            // Utiliser l'URL de ton serveur mock fourni par Postman
+            fetch('https://80a8de19-1fad-410d-b9ea-39431de8c003.mock.pstmn.io/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ t: numbers }) // Envoi du tableau "numbers"
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Afficher les résultats dans le DOM
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `
+                    <strong>JSON reçu :</strong> ${JSON.stringify(data)}<br>
+                    <strong>Médiane :</strong> ${data.mediane}
+                `;
+            })
+            .catch(error => console.error('Erreur :', error));
+        });
+    </script>
+    
+</body>
+</html>
